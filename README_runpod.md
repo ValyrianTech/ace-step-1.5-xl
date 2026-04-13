@@ -1,10 +1,10 @@
-# ACE-Step 1.5 Music Generation API
+# ACE-Step 1.5 XL Music Generation API
 
-Generate high-quality music from text descriptions using ACE-Step 1.5 - an open-source music generation model.
+Generate high-quality music from text descriptions using ACE-Step 1.5 XL - the 4B-parameter DiT model for superior audio quality.
 
 ## What's Included
 
-- **ACE-Step 1.5 models** pre-loaded (~15GB)
+- **ACE-Step 1.5 XL models** pre-loaded (~20GB)
 - **FastAPI server** with REST API endpoints
 - **LLM-powered features** for lyrics/caption formatting
 - **CUDA 12.8** optimized for NVIDIA GPUs
@@ -28,7 +28,7 @@ Once the pod is running:
 
 ### CLI Tool (Recommended)
 
-The easiest way to generate music is using the included Python CLI script. Download `generate_music.py` from the [GitHub repo](https://github.com/ValyrianTech/ace-step-1.5) and run:
+The easiest way to generate music is using the included Python CLI script. Download `generate_music.py` from the [GitHub repo](https://github.com/ValyrianTech/ace-step-1.5-xl) and run:
 
 ```bash
 python generate_music.py \
@@ -64,19 +64,19 @@ curl -X POST http://<POD_IP>:8000/query_result \
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ACESTEP_CONFIG_PATH` | `/app/checkpoints/acestep-v15-base` | Full path to DiT model |
+| `ACESTEP_CONFIG_PATH` | `/app/checkpoints/acestep-v15-xl-base` | Full path to XL DiT model |
 | `ACESTEP_LM_MODEL_PATH` | `/app/checkpoints/acestep-5Hz-lm-1.7B` | Full path to LM model |
 | `ACESTEP_API_PORT` | `8000` | API server port |
 
 ## GPU Requirements
 
-- Minimum: 32GB VRAM
-- Recommended: RTX 5090 or equivalent
+- Minimum: 12GB VRAM (with offload + quantization)
+- Recommended: 20GB+ VRAM (without offload)
 
 ## Links
 
 - [ACE-Step GitHub](https://github.com/ace-step/ACE-Step-1.5)
 - [API Documentation](https://github.com/ace-step/ACE-Step-1.5/blob/main/docs/en/API.md)
-- [Docker Image Source](https://github.com/ValyrianTech/ace-step-1.5)
+- [Docker Image Source](https://github.com/ValyrianTech/ace-step-1.5-xl)
 - [ValyrianTech](https://linktr.ee/ValyrianTech)
 - [Patreon](http://patreon.com/ValyrianTech)
