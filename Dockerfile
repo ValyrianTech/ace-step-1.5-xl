@@ -61,9 +61,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Ensure CUDA libraries are in the library path
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
-
 # Install system dependencies including Python, pip, git, and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11 \
@@ -74,10 +71,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libsndfile1 \
     ffmpeg \
-    cuda-nvrtc-12-8 \
     && rm -rf /var/lib/apt/lists/* \
-    && ln -sf /usr/bin/python3.11 /usr/bin/python \
-    && ln -sf /usr/local/cuda/lib64/libnvrtc.so.12 /usr/local/cuda/lib64/libnvrtc.so.13 || true
+    && ln -sf /usr/bin/python3.11 /usr/bin/python
 
 # Install uv for faster dependency resolution
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
