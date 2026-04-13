@@ -1,8 +1,8 @@
 # =============================================================================
-# ACE-Step 1.5 FastAPI Server - Multi-stage Dockerfile
+# ACE-Step 1.5 XL FastAPI Server - Multi-stage Dockerfile
 # =============================================================================
-# This image includes the ACE-Step models (~15GB total)
-# Build with: docker build --build-arg HF_TOKEN=your_token -t acestep-api:latest .
+# This image includes the ACE-Step XL models (~20GB total)
+# Build with: docker build --build-arg HF_TOKEN=your_token -t acestep-api-xl:latest .
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -24,18 +24,19 @@ ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # Download main model package (includes VAE, Qwen3-Embedding, acestep-5Hz-lm-1.7B)
 # Uses HF_TOKEN for authentication with gated repos
-# Exclude acestep-v15-turbo since we use acestep-v15-base instead
+# Exclude acestep-v15-turbo since we use acestep-v15-xl-base instead
 RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/Ace-Step1.5', local_dir='/models/checkpoints', token=os.environ.get('HF_TOKEN'), ignore_patterns=['acestep-v15-turbo/*'])"
 
-# Download acestep-v15-base as the primary DiT model
-RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-base', local_dir='/models/checkpoints/acestep-v15-base', token=os.environ.get('HF_TOKEN'))"
+# Download acestep-v15-xl-base as the primary DiT model (4B parameters, ~9GB)
+RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-xl-base', local_dir='/models/checkpoints/acestep-v15-xl-base', token=os.environ.get('HF_TOKEN'))"
 
 # Optional: Download additional LM models (uncomment if needed)
 # RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-5Hz-lm-0.6B', local_dir='/models/checkpoints/acestep-5Hz-lm-0.6B')"
 # RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-5Hz-lm-4B', local_dir='/models/checkpoints/acestep-5Hz-lm-4B')"
 
-# Optional: Download additional DiT models (uncomment if needed)
-# RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-turbo-shift3', local_dir='/models/checkpoints/acestep-v15-turbo-shift3')"
+# Optional: Download additional XL DiT models (uncomment if needed)
+# RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-xl-sft', local_dir='/models/checkpoints/acestep-v15-xl-sft')"
+# RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-xl-turbo', local_dir='/models/checkpoints/acestep-v15-xl-turbo')"
 
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime - Install ACE-Step and run from /app
@@ -50,8 +51,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     ACESTEP_OUTPUT_DIR=/app/outputs \
     ACESTEP_TMPDIR=/app/outputs \
     ACESTEP_DEVICE=cuda \
-    # ACE-Step API model paths (full paths to pre-baked models)
-    ACESTEP_CONFIG_PATH=/app/checkpoints/acestep-v15-base \
+    # ACE-Step API model paths (full paths to pre-baked XL models)
+    ACESTEP_CONFIG_PATH=/app/checkpoints/acestep-v15-xl-base \
     ACESTEP_LM_MODEL_PATH=/app/checkpoints/acestep-5Hz-lm-1.7B \
     ACESTEP_LM_BACKEND=pt \
     # Server configuration
@@ -90,7 +91,7 @@ RUN ln -s /app/checkpoints /usr/local/lib/python3.11/dist-packages/checkpoints
 COPY --from=model-downloader /models/checkpoints /app/checkpoints
 
 # Create placeholder for acestep-v15-turbo to satisfy check_main_model_exists()
-# We use acestep-v15-base instead, but the check looks for all MAIN_MODEL_COMPONENTS
+# We use acestep-v15-xl-base instead, but the check looks for all MAIN_MODEL_COMPONENTS
 RUN mkdir -p /app/checkpoints/acestep-v15-turbo
 
 # Copy startup script

@@ -1,6 +1,8 @@
-# ACE-Step 1.5 Docker Image
+# ACE-Step 1.5 XL Docker Image
 
-A Docker image for running ACE-Step 1.5's built-in API server with models pre-baked.
+A Docker image for running ACE-Step 1.5 XL's built-in API server with models pre-baked.
+
+**XL Model**: Uses the 4B-parameter DiT decoder for higher audio quality. Requires ≥12GB VRAM (with offload + quantization) or ≥20GB (without offload).
 
 [![ValyrianTech](https://img.shields.io/badge/ValyrianTech-Links-blue)](https://linktr.ee/ValyrianTech) [![Patreon](https://img.shields.io/badge/Patreon-Support-orange)](http://patreon.com/ValyrianTech)
 
@@ -16,7 +18,7 @@ This template includes all models pre-loaded and is ready to use immediately. On
 ## Features
 
 - **ACE-Step's built-in API server** with full feature set
-- **Multi-stage Docker build** with models baked in (~15GB image)
+- **Multi-stage Docker build** with XL models baked in (~20GB image)
 - **GPU support** via NVIDIA CUDA 12.8 runtime
 - **LLM-powered features**: lyrics/caption formatting
 
@@ -32,10 +34,10 @@ This template includes all models pre-loaded and is ready to use immediately. On
 
 ```bash
 # Using the build script
-python build_docker.py acestep-api --hf-token YOUR_HF_TOKEN --latest
+python build_docker.py acestep-api-xl --hf-token YOUR_HF_TOKEN --latest
 
 # Or manually
-docker build --build-arg HF_TOKEN=YOUR_HF_TOKEN -t acestep-api:latest .
+docker build --build-arg HF_TOKEN=YOUR_HF_TOKEN -t acestep-api-xl:latest .
 ```
 
 ### 2. Run with Docker Compose
@@ -80,7 +82,7 @@ See the [ACE-Step API documentation](https://github.com/ace-step/ACE-Step-1.5/bl
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ACESTEP_CONFIG_PATH` | `/app/checkpoints/acestep-v15-base` | Full path to DiT model |
+| `ACESTEP_CONFIG_PATH` | `/app/checkpoints/acestep-v15-xl-base` | Full path to XL DiT model |
 | `ACESTEP_LM_MODEL_PATH` | `/app/checkpoints/acestep-5Hz-lm-1.7B` | Full path to LM model |
 | `ACESTEP_OUTPUT_DIR` | `/app/outputs` | Generated audio output directory |
 | `ACESTEP_DEVICE` | `cuda` | Device (cuda, cpu, mps) |
