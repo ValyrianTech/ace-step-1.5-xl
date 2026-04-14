@@ -101,6 +101,14 @@ RUN chmod +x /app/start.sh
 # Create output directory
 RUN mkdir -p /app/outputs
 
+# Install FFmpeg development libraries for torchcodec audio encoding
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libavcodec-dev \
+    libavformat-dev \
+    libavutil-dev \
+    libswresample-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Expose ports (8000 for API, 7860 for Gradio UI)
 EXPOSE 8000 7860
 
