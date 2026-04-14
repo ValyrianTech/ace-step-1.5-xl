@@ -2,7 +2,7 @@
 
 A Docker image for running ACE-Step 1.5 XL's built-in API server with models pre-baked.
 
-**XL Model**: Uses the 4B-parameter DiT decoder for higher audio quality. Requires ≥12GB VRAM (with offload + quantization) or ≥20GB (without offload).
+**XL Model**: Uses the 4B-parameter DiT decoder for higher audio quality. Requires a GPU with **48GB+ VRAM**.
 
 [![ValyrianTech](https://img.shields.io/badge/ValyrianTech-Links-blue)](https://linktr.ee/ValyrianTech) [![Patreon](https://img.shields.io/badge/Patreon-Support-orange)](http://patreon.com/ValyrianTech)
 
@@ -10,7 +10,7 @@ A Docker image for running ACE-Step 1.5 XL's built-in API server with models pre
 
 The fastest way to get started is to deploy the pre-built image on RunPod:
 
-[![Deploy on RunPod](https://img.shields.io/badge/RunPod-Deploy-blueviolet?logo=runpod)](https://console.runpod.io/deploy?template=uuc79b5j3c&ref=2vdt3dn9)
+[![Deploy on RunPod](https://img.shields.io/badge/RunPod-Deploy-blueviolet?logo=runpod)](https://console.runpod.io/deploy?template=5fn9cdbhtr&ref=2vdt3dn9)
 
 This template includes all models pre-loaded and is ready to use immediately. Once deployed:
 - **REST API**: `https://<POD_ID>-8000.proxy.runpod.net`
@@ -19,7 +19,7 @@ This template includes all models pre-loaded and is ready to use immediately. On
 
 - **ACE-Step's built-in API server** with full feature set
 - **Multi-stage Docker build** with XL models baked in (~20GB image)
-- **GPU support** via NVIDIA CUDA 12.8 runtime
+- **GPU support** via NVIDIA CUDA 13 runtime
 - **LLM-powered features**: lyrics/caption formatting
 
 ## Quick Start
