@@ -16,7 +16,7 @@ Without these requirements, the pod will fail to start or generate music properl
 - **ACE-Step 1.5 XL models** pre-loaded (~20GB)
 - **FastAPI server** with REST API endpoints
 - **LLM-powered features** for lyrics/caption formatting
-- **CUDA 12.8** optimized for NVIDIA GPUs
+- **CUDA 13** optimized for NVIDIA GPUs
 
 ## API Endpoints
 
