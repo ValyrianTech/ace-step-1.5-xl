@@ -77,11 +77,6 @@ curl -X POST http://<POD_IP>:8000/query_result \
 | `ACESTEP_LM_MODEL_PATH` | `/app/checkpoints/acestep-5Hz-lm-1.7B` | Full path to LM model |
 | `ACESTEP_API_PORT` | `8000` | API server port |
 
-## GPU Requirements
-
-- Minimum: 12GB VRAM (with offload + quantization)
-- Recommended: 20GB+ VRAM (without offload)
-
 ## Links
 
 - [ACE-Step GitHub](https://github.com/ace-step/ACE-Step-1.5)
