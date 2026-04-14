@@ -41,7 +41,7 @@ RUN python -c "import os; from huggingface_hub import snapshot_download; snapsho
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime - Install ACE-Step and run from /app
 # -----------------------------------------------------------------------------
-FROM nvidia/cuda:13.1.0-runtime-ubuntu22.04 as runtime
+FROM nvidia/cuda:13.0.0-runtime-ubuntu22.04 as runtime
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
