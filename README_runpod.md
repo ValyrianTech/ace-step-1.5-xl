@@ -2,6 +2,15 @@
 
 Generate high-quality music from text descriptions using ACE-Step 1.5 XL - the 4B-parameter DiT model for superior audio quality.
 
+## ⚠️ Important: RunPod GPU Requirements
+
+When deploying on RunPod, you **must** select a GPU with the following specifications:
+
+- **CUDA Version**: Select **CUDA 13** in the "Additional Filters" dropdown
+- **VRAM**: Minimum **48GB** GPU memory required
+
+Without these requirements, the pod will fail to start or generate music properly.
+
 ## What's Included
 
 - **ACE-Step 1.5 XL models** pre-loaded (~20GB)
