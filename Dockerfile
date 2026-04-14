@@ -24,8 +24,8 @@ ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # Download main model package (includes VAE, Qwen3-Embedding, acestep-5Hz-lm-1.7B)
 # Uses HF_TOKEN for authentication with gated repos
-# Exclude acestep-v15-turbo since we use acestep-v15-xl-base instead
-RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/Ace-Step1.5', local_dir='/models/checkpoints', token=os.environ.get('HF_TOKEN'), ignore_patterns=['acestep-v15-turbo/*'])"
+# Exclude non-XL DiT models since we use acestep-v15-xl-base instead
+RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/Ace-Step1.5', local_dir='/models/checkpoints', token=os.environ.get('HF_TOKEN'), ignore_patterns=['acestep-v15-turbo/*', 'acestep-v15-base/*'])"
 
 # Download acestep-v15-xl-base as the primary DiT model (4B parameters, ~9GB)
 RUN python -c "import os; from huggingface_hub import snapshot_download; snapshot_download('ACE-Step/acestep-v15-xl-base', local_dir='/models/checkpoints/acestep-v15-xl-base', token=os.environ.get('HF_TOKEN'))"
@@ -46,6 +46,8 @@ FROM nvidia/cuda:13.1.0-runtime-ubuntu22.04 as runtime
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    # Library paths for torchcodec (PyTorch libs + CUDA libs)
+    LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/lib/python3.11/dist-packages/torch/lib:${LD_LIBRARY_PATH} \
     # ACE-Step configuration
     ACESTEP_PROJECT_ROOT=/app \
     ACESTEP_OUTPUT_DIR=/app/outputs \
@@ -101,13 +103,21 @@ RUN chmod +x /app/start.sh
 # Create output directory
 RUN mkdir -p /app/outputs
 
-# Install FFmpeg development libraries for torchcodec audio encoding
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install FFmpeg 6+ from PPA for torchcodec compatibility (Ubuntu 22.04 has FFmpeg 4.4 which is too old)
+# Also install libnpp for CUDA video decoding support
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common \
+    && add-apt-repository -y ppa:ubuntuhandbook1/ffmpeg6 \
+    && apt-get update && apt-get install -y --no-install-recommends \
     libavcodec-dev \
     libavformat-dev \
     libavutil-dev \
     libswresample-dev \
+    libavdevice-dev \
+    libnpp-12-8 \
     && rm -rf /var/lib/apt/lists/*
+
+# Downgrade torchcodec to 0.10.0 (compatible with PyTorch 2.10, 0.11 requires PyTorch 2.11)
+RUN uv pip install --system torchcodec==0.10.0 --index-url=https://download.pytorch.org/whl/cu128
 
 # Expose ports (8000 for API, 7860 for Gradio UI)
 EXPOSE 8000 7860
